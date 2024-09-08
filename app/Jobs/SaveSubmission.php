@@ -14,7 +14,7 @@ class SaveSubmission implements ShouldQueue
 {
     use Queueable, Dispatchable, InteractsWithQueue, SerializesModels;
 
-    protected SubmissionDTO $submissionDTO;
+    public SubmissionDTO $submissionDTO;
 
     /**
      * Create a new job instance.

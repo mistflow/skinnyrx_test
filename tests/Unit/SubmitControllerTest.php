@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Queue;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class SubmitControllerTest extends TestCase
 {
@@ -39,6 +39,36 @@ class SubmitControllerTest extends TestCase
         );
 
         $this->assertInstanceOf(SubmissionDTO::class, $submission);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_job_dispatching_and_processing()
+    {
+        // Fake the queue to intercept job dispatches
+        Queue::fake();
+
+        // Define your test data
+        $submissionDTO = new SubmissionDTO(
+            name: 'John Doe',
+            email: 'john@example.com',
+            message: 'This is a test message.'
+        );
+
+        // Dispatch the job
+        SaveSubmission::dispatch($submissionDTO);
+
+        // Assert that the job was pushed onto the queue
+        Queue::assertPushed(SaveSubmission::class, function ($job) use ($submissionDTO) {
+            return $job->submissionDTO === $submissionDTO;
+        });
+
+        // Optionally, test the job processing
+        Queue::assertPushed(SaveSubmission::class, function ($job) {
+            $job->handle();  // Directly call the handle method to simulate processing
+            return true;
+        });
     }
 
     protected function tearDown(): void

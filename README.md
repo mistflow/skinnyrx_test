@@ -45,4 +45,4 @@
 
 7. Simple Unit Test
     - Made very simple unit test which checks if $submission is instance of SubmissionDTO
-    - I tried to do UnitTest which will check if Job is processed well, but I received very weird error which I really do not understand how to fix: `  Target [Illuminate\Contracts\Bus\Dispatcher] is not instantiable.`
+    - I tried to do UnitTest which checks Queues
